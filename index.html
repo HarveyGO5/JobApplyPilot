@@ -3,20 +3,21 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>JobApplyPilot | AI Job Application Assistant</title>
+    <title>JobApplyPilot | AI Job Application Assistant for LinkedIn and ATS</title>
     <meta
       name="description"
-      content="JobApplyPilot is an AI job application assistant Chrome extension for LinkedIn and supported ATS platforms. Apply faster with quick apply, autofill, AI match scoring, and application tracking."
+      content="JobApplyPilot is an AI job application assistant Chrome extension for LinkedIn and ATS hiring systems. Quick apply, form autofill, AI match score, resume reuse, and application tracking in one workflow."
     />
     <meta
       name="keywords"
       content="AI job application assistant, LinkedIn auto apply extension, quick apply chrome extension, job autofill extension, AI match score for jobs, job application tracker, Workday application automation, Greenhouse application autofill, iCIMS application helper"
     />
+    <meta name="robots" content="index,follow,max-image-preview:large" />
 
     <meta property="og:title" content="JobApplyPilot | AI Job Application Assistant" />
     <meta
       property="og:description"
-      content="Apply faster on LinkedIn and supported external hiring systems with AI-assisted workflows."
+      content="Apply faster with one extension: quick apply, autofill, AI job match scoring, and application tracking."
     />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="./assets/hero-apply-faster.png" />
@@ -26,178 +27,641 @@
     <meta name="twitter:title" content="JobApplyPilot | AI Job Application Assistant" />
     <meta
       name="twitter:description"
-      content="Quick apply, autofill, AI match score, and job application tracking in one Chrome extension."
+      content="Quick apply, profile reuse, AI match score, and job application tracking across LinkedIn and ATS platforms."
     />
     <meta name="twitter:image" content="./assets/hero-apply-faster.png" />
 
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+
     <style>
       :root {
-        --bg: #f7f8fd;
-        --ink: #0f172a;
-        --muted: #475569;
-        --line: #dbe2ef;
-        --primary: #5849f8;
-        --primary-2: #6a5cff;
+        --bg: #f6f7fb;
+        --panel: rgba(255, 255, 255, 0.74);
         --card: #ffffff;
+        --ink: #111827;
+        --muted: #5b6578;
+        --line: #dce3f2;
+        --primary: #4f46e5;
+        --teal: #0ea5a4;
+        --amber: #f59e0b;
+        --shadow-lg: 0 24px 60px rgba(31, 41, 55, 0.14);
+        --shadow-sm: 0 8px 24px rgba(17, 24, 39, 0.08);
       }
 
       * {
         box-sizing: border-box;
       }
 
+      html,
       body {
         margin: 0;
-        font-family: "Segoe UI", "SF Pro Text", "Helvetica Neue", sans-serif;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Manrope", "Avenir Next", "Segoe UI", sans-serif;
         color: var(--ink);
-        background: radial-gradient(circle at 20% 0%, #ecebff 0%, var(--bg) 45%, #f8f9ff 100%);
+        background:
+          radial-gradient(1200px 600px at -10% -20%, #d8d7ff 8%, transparent 55%),
+          radial-gradient(1100px 650px at 110% -20%, #ccefff 8%, transparent 60%),
+          linear-gradient(180deg, #f6f7fb 0%, #f9fbff 55%, #f3f5fb 100%);
         line-height: 1.45;
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
+      .bg-orb {
+        position: fixed;
+        width: 38vw;
+        height: 38vw;
+        border-radius: 50%;
+        filter: blur(70px);
+        z-index: -1;
+        opacity: 0.2;
+        pointer-events: none;
+        transition: transform 0.2s linear;
+      }
+
+      .bg-orb.one {
+        top: -16vw;
+        left: -10vw;
+        background: #6d64ff;
+      }
+
+      .bg-orb.two {
+        top: 28vh;
+        right: -12vw;
+        background: #31c6c4;
       }
 
       .container {
-        width: min(1100px, 92vw);
+        width: min(1160px, 92vw);
         margin: 0 auto;
       }
 
-      header {
-        padding: 22px 0;
-        border-bottom: 1px solid var(--line);
-        background: rgba(255, 255, 255, 0.7);
-        backdrop-filter: blur(8px);
-        position: sticky;
-        top: 0;
+      .glass {
+        background: var(--panel);
+        border: 1px solid rgba(255, 255, 255, 0.65);
+        backdrop-filter: blur(12px);
       }
 
-      .topbar {
-        display: flex;
-        gap: 12px;
-        justify-content: space-between;
+      .chip {
+        display: inline-flex;
         align-items: center;
+        gap: 8px;
+        font-size: 12px;
+        font-weight: 700;
+        color: #334155;
+        padding: 8px 12px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        background: #ffffff;
+      }
+
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 40;
+        border-bottom: 1px solid rgba(220, 227, 242, 0.7);
+      }
+
+      .nav {
+        height: 74px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
       }
 
       .brand {
-        font-weight: 800;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .brand-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: linear-gradient(120deg, var(--primary), #7f7af9);
+        box-shadow: 0 0 0 5px rgba(79, 70, 229, 0.16);
+      }
+
+      .brand-name {
+        font-family: "Space Grotesk", "Manrope", sans-serif;
+        font-weight: 700;
         letter-spacing: 0.2px;
       }
 
-      .actions {
+      .nav-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+
+      .btn {
+        appearance: none;
+        border: 0;
+        text-decoration: none;
+        padding: 11px 15px;
+        border-radius: 11px;
+        font-size: 14px;
+        font-weight: 800;
+        line-height: 1;
+        transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+      }
+
+      .btn:hover {
+        transform: translateY(-1px);
+      }
+
+      .btn.primary {
+        color: #fff;
+        background: linear-gradient(120deg, var(--primary), #736cff);
+        box-shadow: 0 10px 24px rgba(79, 70, 229, 0.32);
+      }
+
+      .btn.secondary {
+        color: #0f172a;
+        background: #ffffff;
+        border: 1px solid var(--line);
+      }
+
+      .hero {
+        padding: 74px 0 30px;
+        display: grid;
+        grid-template-columns: 1.04fr 1fr;
+        gap: 36px;
+        align-items: center;
+      }
+
+      .eyebrow {
+        margin-bottom: 16px;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4 {
+        margin: 0;
+        font-family: "Space Grotesk", "Manrope", sans-serif;
+        letter-spacing: -0.02em;
+      }
+
+      h1 {
+        font-size: clamp(34px, 6vw, 63px);
+        line-height: 0.99;
+        max-width: 15ch;
+      }
+
+      .gradient-text {
+        background: linear-gradient(120deg, #3f38d9, #0ea5a4 85%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+
+      .hero p {
+        margin: 18px 0 0;
+        font-size: clamp(16px, 2.2vw, 21px);
+        color: var(--muted);
+        max-width: 58ch;
+      }
+
+      .hero-points {
+        margin-top: 22px;
+        display: grid;
+        gap: 10px;
+      }
+
+      .point {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        color: #1e293b;
+        font-weight: 650;
+        font-size: 15px;
+      }
+
+      .point::before {
+        content: "";
+        width: 18px;
+        height: 18px;
+        border-radius: 5px;
+        background: linear-gradient(140deg, #4f46e5, #0ea5a4);
+        box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.12);
+      }
+
+      .hero-cta {
+        margin-top: 24px;
         display: flex;
         gap: 10px;
         flex-wrap: wrap;
       }
 
-      .btn {
-        display: inline-block;
-        text-decoration: none;
-        padding: 10px 14px;
+      .hero-card-wrap {
+        position: relative;
+        perspective: 1200px;
+      }
+
+      .hero-card {
+        border-radius: 18px;
+        overflow: hidden;
+        border: 1px solid #d9e2f0;
+        box-shadow: var(--shadow-lg);
+        transform-style: preserve-3d;
+        will-change: transform;
+      }
+
+      .hero-card img {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+
+      .floating-stat {
+        position: absolute;
+        right: -12px;
+        top: 16px;
+        background: #ffffff;
+        border: 1px solid #d8e2f4;
+        box-shadow: var(--shadow-sm);
+        border-radius: 14px;
+        padding: 10px 12px;
+        min-width: 168px;
+      }
+
+      .floating-stat strong {
+        display: block;
+        font-size: 13px;
+      }
+
+      .floating-stat span {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .stats-grid {
+        margin-top: 26px;
+        display: grid;
+        gap: 12px;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .stat {
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 14px;
+        box-shadow: var(--shadow-sm);
+      }
+
+      .stat .num {
+        display: inline-flex;
+        align-items: baseline;
+        gap: 2px;
+        font-size: 30px;
+        font-weight: 800;
+        letter-spacing: -0.03em;
+      }
+
+      .stat .num small {
+        font-size: 15px;
+      }
+
+      .stat p {
+        margin: 6px 0 0;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      section {
+        padding: 64px 0 24px;
+      }
+
+      .section-head {
+        margin-bottom: 20px;
+      }
+
+      .section-head h2 {
+        font-size: clamp(30px, 4vw, 44px);
+      }
+
+      .section-head p {
+        margin: 12px 0 0;
+        max-width: 70ch;
+        color: var(--muted);
+        font-size: 17px;
+      }
+
+      .compare {
+        display: grid;
+        gap: 14px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .compare-card {
+        border-radius: 16px;
+        border: 1px solid var(--line);
+        padding: 18px;
+        background: #fff;
+        box-shadow: var(--shadow-sm);
+      }
+
+      .compare-card h3 {
+        font-size: 21px;
+      }
+
+      .compare-card ul {
+        margin: 14px 0 0;
+        padding-left: 20px;
+        color: #334155;
+      }
+
+      .compare-card li {
+        margin: 9px 0;
+      }
+
+      .compare-card.before {
+        background: linear-gradient(180deg, #fff8f8 0%, #fff 100%);
+      }
+
+      .compare-card.after {
+        background: linear-gradient(180deg, #f4fffb 0%, #fff 100%);
+      }
+
+      .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .feature {
+        border: 1px solid var(--line);
+        border-radius: 15px;
+        padding: 16px;
+        background: #fff;
+        box-shadow: var(--shadow-sm);
+      }
+
+      .feature .icon {
+        width: 36px;
+        height: 36px;
         border-radius: 10px;
-        border: 1px solid transparent;
+        margin-bottom: 10px;
+        display: grid;
+        place-items: center;
+        font-size: 18px;
+      }
+
+      .feature h3 {
+        font-size: 19px;
+      }
+
+      .feature p {
+        margin: 8px 0 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .icon.i1 { background: #e8e7ff; }
+      .icon.i2 { background: #dff6f6; }
+      .icon.i3 { background: #fff2db; }
+      .icon.i4 { background: #dbeafe; }
+      .icon.i5 { background: #f5e8ff; }
+      .icon.i6 { background: #e8f4db; }
+
+      .workflow {
+        margin-top: 18px;
+        border-radius: 18px;
+        border: 1px solid var(--line);
+        background: #fff;
+        box-shadow: var(--shadow-lg);
+        overflow: hidden;
+      }
+
+      .tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 14px;
+        border-bottom: 1px solid var(--line);
+        background: #f8fbff;
+      }
+
+      .tab-btn {
+        border: 1px solid var(--line);
+        background: #fff;
+        border-radius: 999px;
+        padding: 8px 12px;
+        font-size: 13px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .tab-btn.active {
+        color: #fff;
+        background: linear-gradient(120deg, #4f46e5, #0ea5a4);
+        border-color: transparent;
+      }
+
+      .tab-panels {
+        position: relative;
+      }
+
+      .panel {
+        display: none;
+        padding: 18px;
+        grid-template-columns: 1.02fr 1fr;
+        gap: 14px;
+        align-items: center;
+      }
+
+      .panel.active {
+        display: grid;
+      }
+
+      .panel h3 {
+        font-size: 28px;
+      }
+
+      .panel p {
+        margin: 10px 0 0;
+        color: var(--muted);
+      }
+
+      .panel ul {
+        margin: 12px 0 0;
+        padding-left: 20px;
+      }
+
+      .panel li {
+        margin: 7px 0;
+      }
+
+      .panel img {
+        width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+      }
+
+      .logo-strip {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 10px;
+      }
+
+      .logo-chip {
+        border: 1px solid var(--line);
+        background: #fff;
+        border-radius: 12px;
+        padding: 8px 12px;
         font-weight: 700;
         font-size: 14px;
       }
 
-      .btn.primary {
-        background: linear-gradient(120deg, var(--primary), var(--primary-2));
-        color: #fff;
+      .faq {
+        display: grid;
+        gap: 10px;
       }
 
-      .btn.secondary {
+      details {
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 12px 14px;
         background: #fff;
-        color: var(--ink);
-        border-color: var(--line);
       }
 
-      .hero {
-        padding: 52px 0 28px;
+      summary {
+        cursor: pointer;
+        font-weight: 700;
       }
 
-      .hero h1 {
-        margin: 0;
-        font-size: clamp(30px, 6vw, 52px);
-        line-height: 1.03;
-        max-width: 860px;
-      }
-
-      .hero h1 span {
-        color: var(--primary);
-      }
-
-      .hero p {
-        max-width: 760px;
+      details p {
         color: var(--muted);
-        font-size: clamp(16px, 2.4vw, 21px);
+        margin: 10px 0 0;
+      }
+
+      .keyword-block {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .keyword-card {
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: #fff;
+        padding: 14px;
+      }
+
+      .keyword-list {
+        margin-top: 8px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .kw {
+        border: 1px solid #d6e0f1;
+        border-radius: 999px;
+        padding: 6px 10px;
+        font-size: 12px;
+        color: #1e293b;
+        background: #f8fbff;
+      }
+
+      .cta {
+        margin: 40px 0 80px;
+        border-radius: 18px;
+        padding: 28px;
+        border: 1px solid #dce3f2;
+        background:
+          radial-gradient(160px 120px at 12% 18%, #e8e7ff, transparent),
+          radial-gradient(220px 140px at 95% 85%, #def8f8, transparent),
+          #ffffff;
+        box-shadow: var(--shadow-lg);
+      }
+
+      .cta h2 {
+        font-size: clamp(28px, 3.2vw, 40px);
+      }
+
+      .cta p {
+        margin: 10px 0 0;
+        color: var(--muted);
+        max-width: 60ch;
+      }
+
+      .cta .hero-cta {
         margin-top: 16px;
       }
 
-      .hero img {
-        margin-top: 24px;
-        width: 100%;
-        border-radius: 16px;
-        border: 1px solid var(--line);
-      }
-
-      section {
-        padding: 30px 0;
-      }
-
-      h2 {
-        font-size: clamp(22px, 3vw, 34px);
-        margin: 0 0 12px;
-      }
-
-      .lead {
-        margin: 0 0 18px;
-        color: var(--muted);
-        max-width: 860px;
-      }
-
-      .grid {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 14px;
-      }
-
-      .card {
-        background: var(--card);
-        border: 1px solid var(--line);
-        border-radius: 14px;
-        padding: 16px;
-      }
-
-      .card h3 {
-        margin: 0 0 8px;
-        font-size: 18px;
-      }
-
-      .card p {
-        margin: 0;
-        color: var(--muted);
-      }
-
-      .keywords {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 14px;
-      }
-
-      ul {
-        margin: 0;
-        padding-left: 20px;
-      }
-
-      li {
-        margin: 6px 0;
-      }
-
       footer {
-        border-top: 1px solid var(--line);
-        padding: 28px 0 50px;
+        border-top: 1px solid rgba(220, 227, 242, 0.8);
+        padding: 24px 0 44px;
         color: var(--muted);
+        font-size: 14px;
       }
 
-      @media (max-width: 820px) {
-        .grid,
-        .keywords {
+      a {
+        color: inherit;
+      }
+
+      .reveal {
+        opacity: 0;
+        transform: translateY(14px);
+        transition: opacity 0.6s ease, transform 0.6s ease;
+      }
+
+      .reveal.visible {
+        opacity: 1;
+        transform: none;
+      }
+
+      @media (max-width: 1020px) {
+        .hero {
           grid-template-columns: 1fr;
+          gap: 26px;
+        }
+
+        .stats-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .feature-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .panel,
+        .keyword-block {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 720px) {
+        .nav {
+          height: auto;
+          padding: 12px 0;
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        .stats-grid,
+        .compare,
+        .feature-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .floating-stat {
+          display: none;
         }
       }
     </style>
@@ -209,24 +673,36 @@
         "name": "JobApplyPilot",
         "applicationCategory": "BusinessApplication",
         "operatingSystem": "Chrome",
-        "description": "AI job application assistant for LinkedIn and supported ATS platforms with quick apply, autofill, AI match scoring, and application tracking.",
+        "description": "AI job application assistant for LinkedIn and supported ATS platforms with quick apply, autofill, AI match scoring, profile and resume reuse, and application tracking.",
         "url": "https://apply-pilot-web.applypilot.workers.dev/",
         "installUrl": "https://chromewebstore.google.com/detail/jobapplypilot-linkedin-au/imlockpnecjpgiijhacadkamfhmedmac",
-        "keywords": "AI job application assistant, LinkedIn auto apply extension, quick apply extension, job autofill extension, AI match score for jobs, job application tracker, Workday, Greenhouse, iCIMS",
-        "offers": {
-          "@type": "Offer",
-          "price": "0",
-          "priceCurrency": "USD"
-        }
+        "sameAs": [
+          "https://apply-pilot-web.applypilot.workers.dev/",
+          "https://chromewebstore.google.com/detail/jobapplypilot-linkedin-au/imlockpnecjpgiijhacadkamfhmedmac"
+        ],
+        "keywords": "AI job application assistant, LinkedIn auto apply extension, quick apply extension, job autofill extension, AI match score for jobs, job application tracker, Workday, Greenhouse, iCIMS"
       }
     </script>
   </head>
 
   <body>
-    <header>
-      <div class="container topbar">
-        <div class="brand">JobApplyPilot</div>
-        <div class="actions">
+    <div class="bg-orb one" aria-hidden="true"></div>
+    <div class="bg-orb two" aria-hidden="true"></div>
+
+    <header class="glass">
+      <div class="container nav">
+        <div class="brand">
+          <span class="brand-dot" aria-hidden="true"></span>
+          <span class="brand-name">JobApplyPilot</span>
+        </div>
+        <div class="nav-actions">
+          <a
+            class="btn secondary"
+            href="https://apply-pilot-web.applypilot.workers.dev/"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Official Website</a
+          >
           <a
             class="btn primary"
             href="https://chromewebstore.google.com/detail/jobapplypilot-linkedin-au/imlockpnecjpgiijhacadkamfhmedmac"
@@ -234,88 +710,308 @@
             rel="noopener noreferrer"
             >Install on Chrome</a
           >
-          <a
-            class="btn secondary"
-            href="https://apply-pilot-web.applypilot.workers.dev/"
-            target="_blank"
-            rel="noopener noreferrer"
-            >Visit Official Site</a
-          >
         </div>
       </div>
     </header>
 
     <main class="container">
       <section class="hero">
-        <h1>
-          Apply <span>faster</span> with AI-assisted job application workflows
-        </h1>
-        <p>
-          JobApplyPilot helps job seekers reduce repetitive form filling, score job fit faster,
-          and track applications across LinkedIn and supported ATS-powered hiring pages.
-        </p>
-        <img src="./assets/hero-apply-faster.png" alt="JobApplyPilot hero preview" />
+        <div class="reveal">
+          <div class="eyebrow chip">AI Job Application Assistant for LinkedIn and ATS</div>
+          <h1>
+            Apply <span class="gradient-text">faster</span>, decide smarter, and keep your pipeline organized.
+          </h1>
+          <p>
+            JobApplyPilot combines quick apply automation, reusable profile data, AI job match scoring,
+            and application tracking into one practical workflow for active job seekers.
+          </p>
+          <div class="hero-points">
+            <div class="point">One-click apply and repeated form autofill</div>
+            <div class="point">AI-assisted fit scoring to prioritize jobs</div>
+            <div class="point">LinkedIn plus supported external ATS coverage</div>
+          </div>
+          <div class="hero-cta">
+            <a
+              class="btn primary"
+              href="https://chromewebstore.google.com/detail/jobapplypilot-linkedin-au/imlockpnecjpgiijhacadkamfhmedmac"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Get the Extension</a
+            >
+            <a
+              class="btn secondary"
+              href="https://apply-pilot-web.applypilot.workers.dev/"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Product Website</a
+            >
+          </div>
+        </div>
+
+        <div class="hero-card-wrap reveal" id="hero-card-wrap">
+          <div class="floating-stat" aria-hidden="true">
+            <strong><span data-counter="14">14</span> fields autofilled</strong>
+            <span>Time saved in repetitive form steps</span>
+          </div>
+          <div class="hero-card" id="hero-card">
+            <img src="./assets/hero-apply-faster.png" alt="JobApplyPilot interface preview" />
+          </div>
+        </div>
       </section>
 
+      <div class="stats-grid reveal">
+        <article class="stat">
+          <div class="num"><span data-counter="50">0</span><small>+</small></div>
+          <p>form fields commonly reused across applications</p>
+        </article>
+        <article class="stat">
+          <div class="num"><span data-counter="1">0</span><small>workflow</small></div>
+          <p>from job discovery to submission tracking</p>
+        </article>
+        <article class="stat">
+          <div class="num"><span data-counter="4">0</span><small>+</small></div>
+          <p>major platform environments in coverage narrative</p>
+        </article>
+        <article class="stat">
+          <div class="num"><span data-counter="100">0</span><small>%</small></div>
+          <p>focus on reducing repetitive job application effort</p>
+        </article>
+      </div>
+
       <section>
-        <h2>Core product value</h2>
-        <p class="lead">
-          One extension for quick apply, profile reuse, AI fit analysis, and application history.
-        </p>
-        <div class="grid">
-          <article class="card">
-            <h3>Quick Apply and Autofill</h3>
-            <p>Complete repetitive job form steps with saved profile data.</p>
+        <div class="section-head reveal">
+          <h2>From repetitive form work to focused job decisions</h2>
+          <p>
+            Most job seekers lose time on repeated fields and fragmented follow-up. JobApplyPilot is built
+            to compress those steps and make your application process more intentional.
+          </p>
+        </div>
+        <div class="compare reveal">
+          <article class="compare-card before">
+            <h3>Without a workflow extension</h3>
+            <ul>
+              <li>Repeated profile entry on every application form</li>
+              <li>No clear way to prioritize jobs by fit</li>
+              <li>Scattered records across tabs and notes</li>
+              <li>Higher risk of missing follow-ups</li>
+            </ul>
           </article>
-          <article class="card">
-            <h3>AI Match Score</h3>
-            <p>Estimate job fit and prioritize opportunities with clearer signals.</p>
-          </article>
-          <article class="card">
-            <h3>Profile and Resume Reuse</h3>
-            <p>Save once, reuse across applications instead of rebuilding inputs each time.</p>
-          </article>
-          <article class="card">
-            <h3>Application Tracking</h3>
-            <p>Keep a clean record of where you applied and what to follow up on next.</p>
+          <article class="compare-card after">
+            <h3>With JobApplyPilot</h3>
+            <ul>
+              <li>Quick apply plus profile and resume reuse</li>
+              <li>AI match score to filter low-priority opportunities</li>
+              <li>A single history view of submitted applications</li>
+              <li>Faster execution with better process visibility</li>
+            </ul>
           </article>
         </div>
       </section>
 
       <section>
-        <h2>Platform coverage</h2>
-        <p class="lead">
-          Designed for LinkedIn job workflows and compatible external ATS application experiences.
-        </p>
-        <img src="./assets/multi-platform-coverage.png" alt="LinkedIn and ATS platform coverage preview" />
+        <div class="section-head reveal">
+          <h2>Feature stack built for high-volume job search cycles</h2>
+          <p>
+            Product capabilities are organized around real job search bottlenecks: speed, decision quality,
+            reuse, and tracking.
+          </p>
+        </div>
+        <div class="feature-grid reveal">
+          <article class="feature">
+            <div class="icon i1">⚡</div>
+            <h3>Quick Apply</h3>
+            <p>Trigger faster application flows on compatible job pages.</p>
+          </article>
+          <article class="feature">
+            <div class="icon i2">🤖</div>
+            <h3>AI Match Score</h3>
+            <p>Estimate role fit and prioritize where to spend your effort.</p>
+          </article>
+          <article class="feature">
+            <div class="icon i3">🧠</div>
+            <h3>Keyword Insights</h3>
+            <p>Highlight skill relevance signals from job descriptions.</p>
+          </article>
+          <article class="feature">
+            <div class="icon i4">📄</div>
+            <h3>Profile Reuse</h3>
+            <p>Save personal details once and reuse them across forms.</p>
+          </article>
+          <article class="feature">
+            <div class="icon i5">📎</div>
+            <h3>Resume Handling</h3>
+            <p>Keep resume files ready and reduce repeated upload friction.</p>
+          </article>
+          <article class="feature">
+            <div class="icon i6">🗂️</div>
+            <h3>Application Tracking</h3>
+            <p>Track your submitted jobs to support follow-up consistency.</p>
+          </article>
+        </div>
       </section>
 
       <section>
-        <h2>Search and AI discoverability keywords</h2>
-        <p class="lead">
-          These terms are intentionally included for search visibility and AI assistant retrieval quality.
-        </p>
-        <div class="keywords">
-          <article class="card">
+        <div class="section-head reveal">
+          <h2>Interactive product flow</h2>
+          <p>
+            Browse key stages of the job application workflow and how JobApplyPilot supports each stage.
+          </p>
+        </div>
+
+        <div class="workflow reveal">
+          <div class="tabs" role="tablist" aria-label="Workflow tabs">
+            <button class="tab-btn active" role="tab" aria-selected="true" data-tab="apply">Quick Apply</button>
+            <button class="tab-btn" role="tab" aria-selected="false" data-tab="analysis">AI Analysis</button>
+            <button class="tab-btn" role="tab" aria-selected="false" data-tab="platforms">Platforms</button>
+          </div>
+
+          <div class="tab-panels">
+            <article class="panel active" data-panel="apply">
+              <div>
+                <h3>1) Start with faster action</h3>
+                <p>
+                  Begin applications with a faster execution path and autofill repeated form fields.
+                  This reduces context switching and lowers form completion friction.
+                </p>
+                <ul>
+                  <li>One-click action on compatible flows</li>
+                  <li>Reusable profile details for repeated fields</li>
+                  <li>Reduced manual entry overhead</li>
+                </ul>
+              </div>
+              <img src="./assets/hero-apply-faster.png" alt="Quick apply screen" />
+            </article>
+
+            <article class="panel" data-panel="analysis">
+              <div>
+                <h3>2) Prioritize with AI signals</h3>
+                <p>
+                  Use match scoring and keyword relevance to decide where to invest effort first,
+                  especially when handling many active opportunities.
+                </p>
+                <ul>
+                  <li>AI-assisted fit estimation</li>
+                  <li>Keyword and relevance cues</li>
+                  <li>Better triage under high application volume</li>
+                </ul>
+              </div>
+              <img src="./assets/workflow-features-grid.png" alt="AI analysis and workflow features" />
+            </article>
+
+            <article class="panel" data-panel="platforms">
+              <div>
+                <h3>3) Keep one workflow across platforms</h3>
+                <p>
+                  Run a more consistent process across LinkedIn and supported ATS-powered external hiring pages.
+                </p>
+                <ul>
+                  <li>LinkedIn-centric apply workflows</li>
+                  <li>Support narrative for external ATS pages</li>
+                  <li>Unified process visibility and consistency</li>
+                </ul>
+              </div>
+              <img src="./assets/multi-platform-coverage.png" alt="LinkedIn and ATS platform support" />
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-head reveal">
+          <h2>Coverage narrative: LinkedIn + ATS ecosystems</h2>
+          <p>Designed for modern hiring workflows that span multiple systems, not a single job board.</p>
+        </div>
+        <div class="logo-strip reveal">
+          <span class="logo-chip">LinkedIn</span>
+          <span class="logo-chip">Workday</span>
+          <span class="logo-chip">Greenhouse</span>
+          <span class="logo-chip">iCIMS</span>
+          <span class="logo-chip">External career pages</span>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-head reveal">
+          <h2>FAQ</h2>
+          <p>Common questions from users evaluating a job application automation assistant.</p>
+        </div>
+        <div class="faq reveal">
+          <details>
+            <summary>Does JobApplyPilot replace job seeker judgment?</summary>
+            <p>
+              No. It improves workflow speed and organization. Final decisions and submission accuracy remain
+              with the user.
+            </p>
+          </details>
+          <details>
+            <summary>Is this only for LinkedIn?</summary>
+            <p>
+              LinkedIn is a core scenario, and the workflow narrative also includes supported external ATS
+              application environments.
+            </p>
+          </details>
+          <details>
+            <summary>Why include keyword-oriented content on this page?</summary>
+            <p>
+              To improve product discoverability for both classic search engines and AI assistants, while keeping
+              claims aligned with real capabilities.
+            </p>
+          </details>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-head reveal">
+          <h2>Search intent coverage</h2>
+          <p>
+            This section improves discoverability for users searching job application automation and AI-assisted
+            workflow tools.
+          </p>
+        </div>
+        <div class="keyword-block reveal">
+          <article class="keyword-card">
             <h3>Short-tail keywords</h3>
-            <ul>
-              <li>AI job application assistant</li>
-              <li>LinkedIn auto apply extension</li>
-              <li>job autofill extension</li>
-              <li>job application tracker</li>
-              <li>AI match score for jobs</li>
-            </ul>
+            <div class="keyword-list">
+              <span class="kw">AI job application assistant</span>
+              <span class="kw">LinkedIn auto apply extension</span>
+              <span class="kw">job autofill extension</span>
+              <span class="kw">AI match score for jobs</span>
+              <span class="kw">job application tracker</span>
+            </div>
           </article>
-          <article class="card">
+          <article class="keyword-card">
             <h3>Long-tail keywords</h3>
-            <ul>
-              <li>best chrome extension for linkedin easy apply autofill</li>
-              <li>automate repetitive job application forms with profile reuse</li>
-              <li>AI tool to speed up job applications on LinkedIn and ATS platforms</li>
-              <li>track job applications and prioritize by match score</li>
-              <li>chrome extension for workday greenhouse and icims applications</li>
-            </ul>
+            <div class="keyword-list">
+              <span class="kw">best chrome extension for linkedin easy apply autofill</span>
+              <span class="kw">AI tool to speed up job applications</span>
+              <span class="kw">automate repetitive job application forms with profile reuse</span>
+              <span class="kw">chrome extension for workday greenhouse and icims applications</span>
+            </div>
           </article>
+        </div>
+      </section>
+
+      <section class="cta reveal">
+        <h2>Build a faster, cleaner job application pipeline</h2>
+        <p>
+          If you are applying to many roles each week, JobApplyPilot helps you spend less time on repetitive
+          form work and more time on higher-value decisions.
+        </p>
+        <div class="hero-cta">
+          <a
+            class="btn primary"
+            href="https://chromewebstore.google.com/detail/jobapplypilot-linkedin-au/imlockpnecjpgiijhacadkamfhmedmac"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Install from Chrome Web Store</a
+          >
+          <a
+            class="btn secondary"
+            href="https://apply-pilot-web.applypilot.workers.dev/"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Visit Official Website</a
+          >
         </div>
       </section>
     </main>
@@ -323,18 +1019,85 @@
     <footer>
       <div class="container">
         JobApplyPilot official links:
-        <a
-          href="https://chromewebstore.google.com/detail/jobapplypilot-linkedin-au/imlockpnecjpgiijhacadkamfhmedmac"
-          target="_blank"
-          rel="noopener noreferrer"
-          >Chrome Web Store</a
-        >
-        and
-        <a href="https://apply-pilot-web.applypilot.workers.dev/" target="_blank" rel="noopener noreferrer"
-          >Official Website</a
-        >.
+        <a href="https://chromewebstore.google.com/detail/jobapplypilot-linkedin-au/imlockpnecjpgiijhacadkamfhmedmac" target="_blank" rel="noopener noreferrer">Chrome Web Store</a>
+        ·
+        <a href="https://apply-pilot-web.applypilot.workers.dev/" target="_blank" rel="noopener noreferrer">Official Website</a>
       </div>
     </footer>
+
+    <script>
+      (function () {
+        const revealEls = Array.from(document.querySelectorAll('.reveal'));
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.12 }
+        );
+        revealEls.forEach((el) => observer.observe(el));
+
+        const counters = Array.from(document.querySelectorAll('[data-counter]'));
+        const animateCounter = (el) => {
+          const target = Number(el.getAttribute('data-counter') || 0);
+          const start = performance.now();
+          const duration = 1000;
+          const tick = (now) => {
+            const p = Math.min((now - start) / duration, 1);
+            const eased = 1 - Math.pow(1 - p, 3);
+            el.textContent = String(Math.round(target * eased));
+            if (p < 1) requestAnimationFrame(tick);
+          };
+          requestAnimationFrame(tick);
+        };
+        counters.forEach((el) => animateCounter(el));
+
+        const tabs = Array.from(document.querySelectorAll('.tab-btn'));
+        const panels = Array.from(document.querySelectorAll('.panel'));
+        tabs.forEach((tab) => {
+          tab.addEventListener('click', () => {
+            const target = tab.dataset.tab;
+            tabs.forEach((b) => {
+              const active = b === tab;
+              b.classList.toggle('active', active);
+              b.setAttribute('aria-selected', active ? 'true' : 'false');
+            });
+            panels.forEach((panel) => {
+              panel.classList.toggle('active', panel.dataset.panel === target);
+            });
+          });
+        });
+
+        const heroWrap = document.getElementById('hero-card-wrap');
+        const heroCard = document.getElementById('hero-card');
+        if (heroWrap && heroCard) {
+          heroWrap.addEventListener('mousemove', (e) => {
+            const rect = heroWrap.getBoundingClientRect();
+            const x = (e.clientX - rect.left) / rect.width;
+            const y = (e.clientY - rect.top) / rect.height;
+            const rotateY = (x - 0.5) * 6;
+            const rotateX = (0.5 - y) * 5;
+            heroCard.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+          });
+          heroWrap.addEventListener('mouseleave', () => {
+            heroCard.style.transform = 'rotateX(0deg) rotateY(0deg)';
+          });
+        }
+
+        const orbs = Array.from(document.querySelectorAll('.bg-orb'));
+        window.addEventListener('mousemove', (e) => {
+          const x = e.clientX / window.innerWidth;
+          const y = e.clientY / window.innerHeight;
+          orbs.forEach((orb, i) => {
+            const factor = (i + 1) * 8;
+            orb.style.transform = `translate(${(x - 0.5) * factor}px, ${(y - 0.5) * factor}px)`;
+          });
+        });
+      })();
+    </script>
   </body>
 </html>
-

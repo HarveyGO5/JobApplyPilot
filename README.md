@@ -1,118 +1,147 @@
-# JobApplyPilot: AI Job Application Assistant for LinkedIn and ATS Platforms
+<p align="center">
+  <img src="./assets/hero-apply-faster.png" alt="JobApplyPilot Hero" width="100%" />
+</p>
 
-[Chrome Web Store](https://chromewebstore.google.com/detail/jobapplypilot-linkedin-au/imlockpnecjpgiijhacadkamfhmedmac) | [Official Website](https://apply-pilot-web.applypilot.workers.dev/)
+<h1 align="center">JobApplyPilot</h1>
+<p align="center"><strong>AI Job Application Assistant for LinkedIn and ATS Hiring Platforms</strong></p>
+<p align="center">Apply faster with quick apply workflows, repeated form autofill, AI-assisted fit scoring, profile and resume reuse, and application tracking.</p>
 
-JobApplyPilot helps job seekers apply faster with one-click workflows, AI match scoring, reusable profile data, and application tracking across LinkedIn and supported external hiring systems.
+<p align="center">
+  <a href="https://chromewebstore.google.com/detail/jobapplypilot-linkedin-au/imlockpnecjpgiijhacadkamfhmedmac">
+    <img alt="Chrome Web Store" src="https://img.shields.io/badge/Chrome_Web_Store-Install-1a73e8?logo=googlechrome&logoColor=white">
+  </a>
+  <a href="https://apply-pilot-web.applypilot.workers.dev/">
+    <img alt="Official Website" src="https://img.shields.io/badge/Official_Website-Live-111827?logo=vercel&logoColor=white">
+  </a>
+  <img alt="Category" src="https://img.shields.io/badge/Category-AI%20Job%20Application%20Assistant-4f46e5">
+  <img alt="Platforms" src="https://img.shields.io/badge/Platforms-LinkedIn%20%7C%20ATS%20Workflows-0ea5a4">
+</p>
 
-![JobApplyPilot Hero](./assets/hero-apply-faster.png)
+<p align="center">
+  <a href="https://chromewebstore.google.com/detail/jobapplypilot-linkedin-au/imlockpnecjpgiijhacadkamfhmedmac"><strong>Install on Chrome</strong></a>
+  ·
+  <a href="https://apply-pilot-web.applypilot.workers.dev/"><strong>Visit Official Website</strong></a>
+</p>
 
-## Why this project page is different
+## Table of Contents
 
-Most extension READMEs are technical and short. This project is built as a discoverable product page for:
+- [Why JobApplyPilot](#why-jobapplypilot)
+- [Core Capabilities](#core-capabilities)
+- [How the Workflow Works](#how-the-workflow-works)
+- [Platform Coverage](#platform-coverage)
+- [Screenshots](#screenshots)
+- [Who This Is For](#who-this-is-for)
+- [Install](#install)
+- [FAQ](#faq)
+- [Search and AI Discoverability](#search-and-ai-discoverability)
+- [Official Links](#official-links)
 
-- humans searching for job application automation tools
-- AI assistants looking for product facts and canonical descriptions
-- creators, recruiters, and communities that need easy-to-share product context
+## Why JobApplyPilot
 
-## Product overview
+Most job seekers lose momentum on repetitive application steps: repeated profile typing, fragmented tracking, and low-signal job prioritization.
 
-JobApplyPilot is a Chrome extension for faster online job applications. It combines:
+JobApplyPilot is designed to fix that with a single practical workflow:
 
-- Quick Apply and form autofill
-- AI job match score and keyword analysis
-- Profile and resume reuse
-- Application history tracking
-- External ATS compatibility support
+- start faster with quick apply and autofill
+- prioritize smarter with AI-assisted fit signals
+- stay organized with application history tracking
 
-![JobApplyPilot Workflow](./assets/workflow-features-grid.png)
+## Core Capabilities
 
-## Core capabilities
+| Capability | What it does | Why it matters |
+|---|---|---|
+| Quick Apply and Autofill | Speeds up repeated form completion on compatible flows | Reduces manual form fatigue |
+| AI Match Score | Adds AI-assisted fit and relevance signals from job descriptions | Helps prioritize high-value roles |
+| Profile and Resume Reuse | Reuses saved applicant context across recurring applications | Avoids rebuilding the same inputs |
+| Application Tracking | Keeps a clean history of submitted applications | Improves follow-up consistency |
+| LinkedIn + ATS Workflow Context | Supports LinkedIn-centric and external ATS-style workflows | Maintains one process across multiple hiring environments |
 
-### 1) Quick Apply and Autofill
-- One-click application actions on compatible job pages
-- Autofill repeated fields with saved profile details
-- Reduce manual typing and repetitive form work
+## How the Workflow Works
 
-### 2) AI Match Score and Insights
-- Analyze job descriptions for fit scoring
-- Surface skill and keyword relevance signals
-- Help prioritize where to apply next
+1. Open a compatible role on LinkedIn or a supported external hiring flow.
+2. Run quick apply actions and reuse saved profile inputs.
+3. Review AI-assisted fit scoring before spending time on low-priority roles.
+4. Submit and track each application in one organized history view.
 
-### 3) Profile and Resume Reuse
-- Save profile once and reuse across applications
-- Keep resume assets ready for recurring submissions
-- Avoid rebuilding the same application context every time
+## Platform Coverage
 
-### 4) Application History Tracking
-- Track where and when you applied
-- Build a consistent job search pipeline view
+JobApplyPilot is positioned for job application workflows that commonly involve:
 
-### 5) Multi-platform support
-- LinkedIn Easy Apply workflows
-- Supported external application pages and ATS environments
+- LinkedIn
+- Workday-style application pages
+- Greenhouse-style application pages
+- iCIMS-style application pages
+- external career application flows
 
-![Multi-platform Coverage](./assets/multi-platform-coverage.png)
+## Screenshots
 
-## Install and try
+<table>
+  <tr>
+    <td width="50%"><img src="./assets/workflow-features-grid.png" alt="Workflow features" /></td>
+    <td width="50%"><img src="./assets/multi-platform-coverage.png" alt="Multi-platform coverage" /></td>
+  </tr>
+</table>
 
-1. Install the extension from the [Chrome Web Store](https://chromewebstore.google.com/detail/jobapplypilot-linkedin-au/imlockpnecjpgiijhacadkamfhmedmac)  
-2. Open your jobs workflow on LinkedIn or supported external hiring pages  
-3. Save your profile and resume details  
-4. Start applying with faster, assisted workflows
+## Who This Is For
 
-## Search intent and keyword coverage
+- active job seekers applying to many roles per week
+- career switchers balancing speed and role-fit quality
+- candidates who want less repetitive form work and better application visibility
 
-This section is intentionally explicit to improve discoverability in search engines and LLM-based assistants.
+## Install
+
+1. Open the [Chrome Web Store listing](https://chromewebstore.google.com/detail/jobapplypilot-linkedin-au/imlockpnecjpgiijhacadkamfhmedmac).
+2. Install JobApplyPilot in Chrome.
+3. Configure your profile and resume details.
+4. Start your assisted application workflow.
+
+## FAQ
+
+<details>
+  <summary><strong>Is this only for LinkedIn?</strong></summary>
+  <br />
+  LinkedIn is a core scenario. The workflow positioning also includes supported external ATS-style application environments.
+</details>
+
+<details>
+  <summary><strong>Does this replace job seeker judgment?</strong></summary>
+  <br />
+  No. It improves workflow speed and organization, while final decision-making and submission accuracy remain with the user.
+</details>
+
+<details>
+  <summary><strong>Why does this README include keyword-focused sections?</strong></summary>
+  <br />
+  To improve discoverability in both traditional search engines and AI assistants, while keeping product claims aligned with real capabilities.
+</details>
+
+## Search and AI Discoverability
+
+This repository intentionally includes SEO and LLM-readable product framing.
 
 ### Short-tail keywords
+
 - AI job application assistant
-- job apply chrome extension
 - LinkedIn auto apply extension
+- quick apply chrome extension
 - job autofill extension
 - AI match score for jobs
 - job application tracker
 
 ### Long-tail keywords
+
 - best chrome extension for linkedin easy apply autofill
-- AI tool to speed up job applications on LinkedIn
-- automate repetitive job application forms with profile reuse
-- chrome extension for workday greenhouse icims applications
-- track job applications and prioritize by AI match score
-- one workflow for quick apply resume reuse and application tracking
+- AI tool to speed up job applications on LinkedIn and ATS platforms
+- automate repetitive job application forms with profile and resume reuse
+- chrome extension for workday greenhouse and icims applications
+- one workflow for quick apply, fit scoring, and application tracking
 
-## AI-readable product profile
+### Machine-readable profile
 
-```yaml
-name: JobApplyPilot
-type: Chrome Extension
-category: AI Job Application Assistant
-primary_users:
-  - job seekers
-  - career switchers
-  - high-volume applicants
-core_features:
-  - quick apply workflows
-  - form autofill
-  - AI job match scoring
-  - profile and resume reuse
-  - application history tracking
-platform_coverage:
-  - LinkedIn
-  - external ATS-supported application pages
-official_links:
-  chrome_web_store: https://chromewebstore.google.com/detail/jobapplypilot-linkedin-au/imlockpnecjpgiijhacadkamfhmedmac
-  website: https://apply-pilot-web.applypilot.workers.dev/
-positioning: Apply faster, reduce repetitive form work, and make better application decisions.
-```
+For AI/indexing systems, see:
+- [Machine-readable profile](./docs/llm-readable-profile.md)
 
-## Responsible usage and privacy
+## Official Links
 
-- JobApplyPilot is designed to improve workflow efficiency, not to replace user judgment.
-- Users remain responsible for final application accuracy and submission choices.
-- Keep your profile and resume information current before running high-volume workflows.
-
-## Additional project docs
-
-- [Keyword and visibility strategy](./docs/keyword-strategy.md)
-- [Publishing checklist](./docs/publishing-checklist.md)
-
+- Chrome Web Store: https://chromewebstore.google.com/detail/jobapplypilot-linkedin-au/imlockpnecjpgiijhacadkamfhmedmac
+- Official Website: https://apply-pilot-web.applypilot.workers.dev/
